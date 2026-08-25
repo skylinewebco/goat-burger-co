@@ -1,0 +1,7 @@
+# build tooling / local
+node_modules/
+# personal / scratch (do not publish)
+chat-extract.txt
+*.tmp
+# dev-only render artifacts
+debug-*.png

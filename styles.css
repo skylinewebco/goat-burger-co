@@ -1,0 +1,256 @@
+/* =========================================================
+   GOAT BURGER CO. — cinematic scroll film
+   ========================================================= */
+:root{
+  --black:#0b0b0b; --charcoal:#141414; --surface:#1f1f1f;
+  --gold:#d4af37; --gold-soft:#e7c96b; --orange:#ff8a00;
+  --cream:#f5e6c8; --white:#fff; --muted:#8f877b;
+  --line:rgba(255,255,255,.08);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --pad:clamp(20px,5vw,64px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--black);color:var(--white);
+  font-family:'Poppins',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:var(--gold);color:#000}
+
+/* atmosphere */
+.grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.vignette{position:fixed;inset:0;z-index:6;pointer-events:none;
+  background:radial-gradient(130% 100% at 50% 42%,transparent 42%,rgba(0,0,0,.72) 100%)}
+
+/* cursor */
+.cursor,.cursor-dot{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;border-radius:50%;
+  transform:translate(-50%,-50%);mix-blend-mode:difference}
+.cursor{width:36px;height:36px;border:1px solid rgba(255,255,255,.6);
+  transition:width .3s var(--ease),height .3s var(--ease),background .3s}
+.cursor-dot{width:5px;height:5px;background:#fff}
+.cursor.grow{width:60px;height:60px;background:rgba(255,255,255,.1);border-color:transparent}
+@media (hover:none),(pointer:coarse){.cursor,.cursor-dot{display:none}}
+
+/* ---------- Preloader + logo light sweep ---------- */
+.preloader{position:fixed;inset:0;z-index:1000;background:var(--black);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px}
+.pre-brand{font-family:'Bebas Neue';font-size:clamp(34px,7vw,64px);letter-spacing:3px;color:var(--cream);
+  display:flex;gap:.3em;align-items:baseline}
+.pre-brand em{font-style:normal;color:var(--gold);font-size:.5em;letter-spacing:5px}
+.shimmer{position:relative;color:#5a5346;
+  background:linear-gradient(100deg,#5a5346 0%,#5a5346 38%,#fff6df 50%,#5a5346 62%,#5a5346 100%);
+  background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:sweep 2.4s var(--ease) infinite}
+@keyframes sweep{0%{background-position:180% 0}100%{background-position:-80% 0}}
+.pre-line{width:min(260px,60vw);height:1px;background:var(--line);overflow:hidden}
+.pre-line span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--orange))}
+.preloader.done{opacity:0;visibility:hidden;transition:opacity .9s var(--ease),visibility .9s}
+
+/* ---------- Nav ---------- */
+.nav{position:fixed;top:0;left:0;width:100%;z-index:100;display:flex;align-items:center;
+  justify-content:space-between;padding:24px var(--pad);transition:padding .4s var(--ease),background .4s}
+.nav.scrolled{padding:15px var(--pad);background:rgba(11,11,11,.55);backdrop-filter:blur(12px)}
+.brand{font-family:'Bebas Neue';font-size:24px;letter-spacing:1.5px}
+.brand em{font-style:normal;color:var(--gold)}
+.nav__links{display:flex;gap:30px;font-size:11px;letter-spacing:2.5px;color:var(--cream)}
+.nav__links a{position:relative;opacity:.75;transition:opacity .3s}
+.nav__links a::after{content:"";position:absolute;left:0;bottom:-5px;width:100%;height:1px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+.nav__links a:hover{opacity:1}.nav__links a:hover::after{transform:scaleX(1)}
+.hamburger{display:none;width:40px;height:34px;background:none;border:none;cursor:pointer;
+  flex-direction:column;justify-content:center;align-items:flex-end;gap:7px}
+.hamburger span{display:block;height:1.5px;background:#fff;transition:.4s var(--ease)}
+.hamburger span:nth-child(1){width:26px}.hamburger span:nth-child(2){width:16px}
+.hamburger.open span:nth-child(1){transform:translateY(4.5px) rotate(45deg)}
+.hamburger.open span:nth-child(2){transform:translateY(-4px) rotate(-45deg);width:26px}
+
+/* ---------- Fullscreen menu ---------- */
+.menu{position:fixed;inset:0;z-index:99;background:var(--black);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:40px;pointer-events:none;
+  clip-path:circle(0% at calc(100% - 42px) 40px);transition:clip-path .8s var(--ease)}
+.menu::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 80% 8%,rgba(255,138,0,.15),transparent 60%)}
+.menu.open{clip-path:circle(150% at calc(100% - 42px) 40px);pointer-events:auto}
+.menu__list{display:flex;flex-direction:column;gap:4px;text-align:center}
+.menu__list a{font-family:'Bebas Neue';font-size:clamp(40px,12vw,84px);letter-spacing:2px;line-height:1.02;
+  opacity:0;transform:translateY(26px);transition:.6s var(--ease)}
+.menu.open .menu__list a{opacity:1;transform:none}
+.menu.open .menu__list a:nth-child(1){transition-delay:.16s}
+.menu.open .menu__list a:nth-child(2){transition-delay:.24s}
+.menu.open .menu__list a:nth-child(3){transition-delay:.32s}
+.menu__list a i{font-family:'Poppins';font-style:normal;font-size:12px;color:var(--gold);margin-right:14px;letter-spacing:2px}
+.menu__list a:hover{color:var(--gold)}
+.menu__foot{position:absolute;bottom:36px;font-size:10px;letter-spacing:3px;color:var(--muted)}
+
+/* ---------- Progress ---------- */
+.progress{position:fixed;top:0;left:0;width:100%;height:2px;z-index:98}
+.progress span{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;
+  background:linear-gradient(90deg,var(--gold),var(--orange))}
+
+/* =========================================================
+   FILM STAGE (fixed — the burger is always on screen)
+   ========================================================= */
+.film{position:fixed;inset:0;z-index:5;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(90% 70% at 50% 34%,rgba(60,40,18,.35),transparent 60%),
+    radial-gradient(120% 120% at 50% 120%,rgba(255,138,0,.06),transparent 55%),
+    linear-gradient(180deg,#0d0c0b,#080808)}
+.film__glow{position:absolute;width:78vmin;height:78vmin;border-radius:50%;will-change:transform,opacity;
+  background:radial-gradient(circle,rgba(255,150,40,.20),rgba(212,175,55,.06) 42%,transparent 70%);filter:blur(14px)}
+.film__key{position:absolute;top:-16%;left:50%;width:120vmin;height:120vmin;transform:translateX(-50%);
+  background:radial-gradient(circle at 50% 28%,rgba(255,240,214,.10),transparent 46%);pointer-events:none}
+.film__shadow{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);width:44vmin;height:7vmin;
+  border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.7),transparent 76%);filter:blur(7px);
+  will-change:transform,opacity;z-index:1}
+
+/* ---------- The camera + REAL burger cutout, sliced by clip-path ---------- */
+.camera{position:relative;width:min(66vmin,540px);height:min(66vmin,540px);will-change:transform;z-index:2}
+.burger{position:relative;width:100%;height:100%;display:grid;place-items:center;
+  transform:translateX(var(--bx,0)) translateY(var(--by,0))}
+.layer{grid-area:1/1;width:100%;height:100%;display:grid;place-items:center;
+  will-change:transform,opacity;position:relative}
+/* each layer is its OWN real photographic ingredient cutout */
+.layer__img{grid-area:1/1;width:68%;height:auto;display:block;
+  filter:drop-shadow(0 14px 18px rgba(0,0,0,.5));-webkit-user-drag:none;user-select:none}
+/* one soft contact shadow under the whole assembled burger */
+.burger::after{content:"";position:absolute;left:50%;bottom:4%;transform:translateX(-50%);
+  width:60%;height:7%;background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent 78%);
+  filter:blur(9px);z-index:-1}
+
+/* =========================================================
+   CAPTIONS (editorial, cross-fade with scroll)
+   ========================================================= */
+.captions{position:absolute;inset:0;z-index:4;pointer-events:none}
+.captions::before{content:"";position:absolute;left:0;bottom:0;width:70%;height:70%;
+  background:radial-gradient(70% 80% at 22% 78%,rgba(6,6,6,.72),transparent 72%)}
+@media (max-width:640px){.captions::before{width:100%;height:60%;
+  background:linear-gradient(180deg,transparent,rgba(6,6,6,.82) 70%)}}
+.cap{position:absolute;left:var(--pad);bottom:12vh;max-width:min(460px,42vw);opacity:0;
+  will-change:transform,opacity;text-shadow:0 2px 26px rgba(0,0,0,.7)}
+.cap__idx{font-size:11px;letter-spacing:5px;color:var(--gold);display:block;margin-bottom:14px}
+.cap__title{font-family:'Bebas Neue';font-size:clamp(46px,7vw,104px);line-height:.9;letter-spacing:1px}
+.cap__title .g{color:var(--gold)}
+.cap__lines{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px}
+.cap__lines span{font-size:13px;letter-spacing:1px;color:var(--cream);opacity:.85;font-weight:300}
+.cap__lines span::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--orange);margin-right:9px;vertical-align:middle}
+.cap--hero{bottom:auto;top:50%;transform:translateY(-50%);max-width:min(620px,86vw)}
+.cap--hero .cap__title{font-size:clamp(56px,10vw,150px)}
+.cap--hero .lead{font-size:15px;color:var(--muted);margin-top:22px;max-width:40ch;line-height:1.6;font-weight:300}
+
+/* nutrition overlay */
+.nutri{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:26px;opacity:0;pointer-events:none;background:radial-gradient(60% 60% at 50% 50%,rgba(8,8,8,.7),transparent 75%)}
+.nutri__grid{display:grid;grid-template-columns:repeat(4,auto);gap:clamp(20px,5vw,60px);text-align:center}
+.nutri__item b{font-family:'Bebas Neue';font-size:clamp(48px,8vw,96px);line-height:1;color:var(--cream);display:block}
+.nutri__item span{font-size:11px;letter-spacing:3px;color:var(--muted);margin-top:6px;display:block}
+.nutri__note{font-size:11px;letter-spacing:2px;color:var(--muted)}
+
+/* hint */
+.hint{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);z-index:4;
+  font-size:10px;letter-spacing:3px;color:var(--muted);display:flex;align-items:center;gap:11px;transition:opacity .6s}
+.hint span{width:20px;height:32px;border:1px solid var(--muted);border-radius:11px;position:relative;display:inline-block}
+.hint span::after{content:"";position:absolute;top:6px;left:50%;width:3px;height:6px;background:var(--gold);border-radius:2px;
+  transform:translateX(-50%);animation:wheel 1.6s var(--ease) infinite}
+@keyframes wheel{0%{opacity:0;transform:translate(-50%,0)}30%{opacity:1}70%{opacity:1;transform:translate(-50%,10px)}100%{opacity:0;transform:translate(-50%,13px)}}
+
+/* the tall scroll track that drives the film */
+.track{height:820vh;position:relative;z-index:1}
+
+/* =========================================================
+   DELIVERY / MEAL scaffold (dormant until real photos exist)
+   ========================================================= */
+.meal{position:absolute;inset:0;z-index:3;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.meal__el{position:absolute;left:50%;top:50%;max-width:60%;opacity:0;will-change:transform,opacity;
+  transform:translate(-50%,-50%);filter:drop-shadow(0 24px 30px rgba(0,0,0,.55));display:none}
+.meal.ready .meal__el.loaded{display:block}
+
+/* =========================================================
+   STORE / MENU — light theme, real food photography
+   ========================================================= */
+.eyebrow{font-size:11px;letter-spacing:5px;color:var(--gold);margin-bottom:20px}
+.eyebrow--dark{color:#b8862b}
+.cta{display:inline-block;margin-top:40px;padding:19px 46px;border-radius:40px;font-size:13px;letter-spacing:3px;
+  background:linear-gradient(100deg,var(--gold),var(--gold-soft));color:#000;font-weight:600;cursor:pointer;
+  box-shadow:0 14px 44px -10px rgba(212,175,55,.5);transition:transform .4s var(--ease),box-shadow .4s}
+.cta:hover{transform:translateY(-3px);box-shadow:0 20px 54px -8px rgba(212,175,55,.7)}
+.order__note{font-size:11px;letter-spacing:1px;color:#8a8378;margin-top:26px}
+
+.store{position:relative;z-index:10;padding:26vh var(--pad) 12vh;color:#1a1611;overflow:hidden;
+  /* the dark→light transition: top matches the cinematic film, resolves to warm cream */
+  background:linear-gradient(180deg,#0b0b0b 0%,#0d0c0b 9%,
+    #2a2420 16%,#8a7f70 24%,#e9dfce 32%,#f7f1e6 46%,#fbf6ec 100%)}
+.store__intro{max-width:var(--maxw);margin:0 auto 60px;text-align:center}
+.store__title{font-family:'Bebas Neue';font-size:clamp(52px,10vw,132px);line-height:.9;letter-spacing:1px;color:#1a1611}
+.store__sub{font-size:15px;color:#6f665a;margin-top:16px;letter-spacing:.5px}
+
+.menu-grid{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.mcard{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(40,26,10,.35);
+  border:1px solid rgba(26,22,17,.06);display:flex;flex-direction:column;
+  transform:translateY(30px);opacity:0;transition:transform .8s var(--ease),opacity .8s var(--ease),box-shadow .4s}
+.mcard.in{transform:none;opacity:1}
+.mcard:hover{box-shadow:0 40px 70px -28px rgba(40,26,10,.45)}
+.mcard--wide{grid-column:1 / -1;flex-direction:row}
+.mcard__img{position:relative;aspect-ratio:4/3;background:
+  radial-gradient(circle at 50% 42%,#2a2622,#141210);overflow:hidden;flex:1}
+.mcard--wide .mcard__img{aspect-ratio:auto;min-height:300px}
+.mcard__img img{width:100%;height:100%;object-fit:cover;display:none}
+.mcard__img.has-photo img{display:block}
+/* elegant placeholder while awaiting the real photo */
+.mcard__img:not(.has-photo)::after{content:"PHOTO";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:11px;letter-spacing:4px;color:rgba(245,230,200,.4);
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.02) 0 10px,transparent 10px 20px)}
+.mcard__body{padding:24px 26px 26px;display:flex;flex-direction:column;gap:12px;flex:1;justify-content:center}
+.mcard__row{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+.mcard__row h3{font-size:20px;font-weight:600;color:#1a1611}
+.mcard__price{font-family:'Bebas Neue';font-size:30px;color:#b8862b}
+.mcard__body p{font-size:13.5px;line-height:1.6;color:#6f665a;font-weight:300}
+.mcard__cta{align-self:flex-start;margin-top:6px;padding:11px 22px;border-radius:30px;font-size:11px;letter-spacing:2px;
+  font-weight:600;cursor:pointer;border:1px solid rgba(26,22,17,.18);background:transparent;color:#1a1611;
+  transition:.3s var(--ease)}
+.mcard__cta:hover{border-color:#b8862b;color:#b8862b;transform:translateY(-2px)}
+.mcard__cta--solid{background:linear-gradient(100deg,var(--gold),var(--gold-soft));border-color:transparent;color:#000}
+
+.store__cta{max-width:var(--maxw);margin:16vh auto 0;text-align:center}
+.store__big{font-family:'Bebas Neue';font-size:clamp(44px,9vw,120px);line-height:.9;letter-spacing:1px;color:#1a1611}
+.store__brand{font-family:'Bebas Neue';font-size:clamp(30px,6vw,60px);letter-spacing:3px;color:rgba(26,22,17,.07);margin-top:70px}
+[data-sr]{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+[data-sr].in{opacity:1;transform:none}
+
+/* toast */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(30px);z-index:200;
+  background:linear-gradient(100deg,var(--gold),var(--gold-soft));color:#000;font-weight:600;font-size:13px;letter-spacing:1px;
+  padding:14px 26px;border-radius:40px;opacity:0;pointer-events:none;box-shadow:0 16px 40px -10px rgba(212,175,55,.6);
+  transition:.5s var(--ease)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* =========================================================
+   RESPONSIVE — recomposed, not shrunk
+   ========================================================= */
+@media (max-width:860px){
+  .nav__links{display:none}
+  .hamburger{display:flex}
+  .menu-grid{grid-template-columns:repeat(2,1fr)}
+  .mcard--wide{flex-direction:column}
+  .mcard--wide .mcard__img{aspect-ratio:16/10;min-height:0}
+}
+@media (max-width:560px){
+  .menu-grid{grid-template-columns:1fr;gap:20px}
+  .store{padding:24vh var(--pad) 12vh}
+}
+@media (max-width:640px){
+  /* burger sits in upper area, captions live at the bottom */
+  .film{align-items:flex-start}
+  .camera{width:min(80vw,340px);height:min(80vw,340px);margin-top:14vh}
+  .film__shadow{bottom:auto;top:44vh}
+  .cap{left:var(--pad);right:var(--pad);bottom:8vh;max-width:100%;text-align:center}
+  .cap__lines{justify-content:center}
+  .cap--hero{top:auto;bottom:9vh;transform:none;text-align:center}
+  .cap--hero .lead{margin-left:auto;margin-right:auto}
+  .nutri__grid{grid-template-columns:repeat(2,1fr);gap:24px 30px}
+  .hint{bottom:20px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .shimmer{animation:none;-webkit-text-fill-color:var(--cream)}
+  .hint span::after{animation:none}
+}

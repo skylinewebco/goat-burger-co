@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0b0b0b" />
+<title>GOAT BURGER CO. — Big Flavor. Zero Compromise.</title>
+<meta name="description" content="A cinematic, scroll-controlled burger product film. GOAT BURGER CO." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<!-- Preloader with logo light-sweep -->
+<div class="preloader" id="preloader">
+  <div class="pre-brand"><span class="shimmer">GOAT</span> <em>BURGER CO.</em></div>
+  <div class="pre-line"><span id="preBar"></span></div>
+</div>
+
+<!-- Minimal nav -->
+<header class="nav" id="nav">
+  <a href="#top" class="brand" data-hover>GOAT <em>BURGER CO.</em></a>
+  <nav class="nav__links">
+    <a href="#top" data-hover>FILM</a>
+    <a href="#nutrition" data-hover>NUTRITION</a>
+    <a href="#order" data-hover>ORDER</a>
+  </nav>
+  <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+</header>
+
+<div class="menu" id="menu" aria-hidden="true">
+  <nav class="menu__list">
+    <a href="#top" data-hover><i>01</i>The Film</a>
+    <a href="#nutrition" data-hover><i>02</i>Nutrition</a>
+    <a href="#order" data-hover><i>03</i>Order</a>
+  </nav>
+  <div class="menu__foot">GOAT BURGER CO. — Big Flavor. Zero Compromise.</div>
+</div>
+
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+<!-- ================= FIXED CINEMATIC STAGE ================= -->
+<div class="film" id="top" aria-label="Interactive burger film">
+  <div class="film__glow" id="glow"></div>
+  <div class="film__key" id="keylight"></div>
+
+  <!-- The camera holds the REAL burger photo; each layer is the same isolated
+       cutout, clipped to a horizontal band, so the slices separate & reassemble. -->
+  <div class="camera" id="camera">
+    <div class="burger" id="burger">
+      <div class="layer" data-key="topbun"><img class="layer__img" src="topbun.png" alt="toasted brioche top bun" /></div>
+      <div class="layer" data-key="cheeseA"><img class="layer__img" src="cheeseA.png" alt="melted American cheese" /></div>
+      <div class="layer" data-key="pattyA"><img class="layer__img" src="pattyA.png" alt="smashed beef patty" /></div>
+      <div class="layer" data-key="cheeseB"><img class="layer__img" src="cheeseB.png" alt="second layer of melted American cheese" /></div>
+      <div class="layer" data-key="pattyB"><img class="layer__img" src="pattyB.png" alt="second smashed beef patty" /></div>
+      <div class="layer" data-key="bottombun"><img class="layer__img" src="bottombun.png" alt="toasted brioche bottom bun" /></div>
+    </div>
+  </div>
+
+  <div class="film__shadow" id="shadow"></div>
+
+  <!-- Editorial caption layer (filled by JS, cross-fades with scroll) -->
+  <div class="captions" id="captions"></div>
+
+  <!-- Nutrition overlay beat -->
+  <div class="nutri" id="nutrition">
+    <div class="nutri__grid">
+      <div class="nutri__item"><b class="count" data-to="850">0</b><span>Calories</span></div>
+      <div class="nutri__item"><b><span class="count" data-to="42">0</span>g</b><span>Protein</span></div>
+      <div class="nutri__item"><b><span class="count" data-to="52">0</span>g</b><span>Carbs</span></div>
+      <div class="nutri__item"><b><span class="count" data-to="48">0</span>g</b><span>Fat</span></div>
+    </div>
+    <p class="nutri__note">The GOAT signature — demo values, prepared fresh.</p>
+  </div>
+
+  <!-- Delivery / meal stage — appears after the burger reassembles.
+       Uses your real photos when present; hidden gracefully until then. -->
+  <div class="meal" id="meal" aria-hidden="true">
+    <img class="meal__el meal__box-open"   id="boxOpen"   data-photo="box-open.png"   alt="" />
+    <img class="meal__el meal__fries"       id="fries"     data-photo="fries.png"       alt="" />
+    <img class="meal__el meal__shake"       id="shake"     data-photo="shake.png"       alt="" />
+    <img class="meal__el meal__box-closed"  id="boxClosed" data-photo="box-closed.png"  alt="" />
+  </div>
+
+  <!-- scroll hint (fades after first scroll) -->
+  <div class="hint" id="hint"><span></span>SCROLL TO PLAY</div>
+</div>
+
+<!-- Tall invisible track that provides the scroll distance for the film -->
+<div class="track" id="track"></div>
+
+<!-- ============ STORE / MENU (light theme) ============ -->
+<section class="store" id="store">
+  <div class="store__intro">
+    <p class="eyebrow eyebrow--dark" data-sr>THE LINEUP</p>
+    <h2 class="store__title" data-sr>GRAB THE<br/>WHOLE MEAL</h2>
+    <p class="store__sub" data-sr>Real food. Made fresh. Made bold.</p>
+  </div>
+
+  <div class="menu-grid">
+    <article class="mcard" data-sr>
+      <div class="mcard__img"><img data-photo="menu-burger.jpg" src="burger-cut.png" alt="The GOAT Signature double smash cheeseburger" /></div>
+      <div class="mcard__body">
+        <div class="mcard__row"><h3>The GOAT Signature</h3><span class="mcard__price">$14</span></div>
+        <p>Double smash beef, aged American cheese, toasted brioche.</p>
+        <button class="mcard__cta addbtn" data-hover>ADD TO ORDER</button>
+      </div>
+    </article>
+
+    <article class="mcard" data-sr>
+      <div class="mcard__img" data-slot="fries"><img data-photo="menu-fries.jpg" alt="GOAT hand-cut fries" /></div>
+      <div class="mcard__body">
+        <div class="mcard__row"><h3>GOAT Fries</h3><span class="mcard__price">$6</span></div>
+        <p>Hand-cut, skin-on, tossed in sea salt. Crisp every time.</p>
+        <button class="mcard__cta addbtn" data-hover>ADD TO ORDER</button>
+      </div>
+    </article>
+
+    <article class="mcard" data-sr>
+      <div class="mcard__img" data-slot="shake"><img data-photo="menu-shake.jpg" alt="Thick vanilla malt shake" /></div>
+      <div class="mcard__body">
+        <div class="mcard__row"><h3>The Shake</h3><span class="mcard__price">$7</span></div>
+        <p>Thick vanilla malt, real dairy, hand-spun to order.</p>
+        <button class="mcard__cta addbtn" data-hover>ADD TO ORDER</button>
+      </div>
+    </article>
+
+    <article class="mcard mcard--wide" data-sr>
+      <div class="mcard__img" data-slot="combo"><img data-photo="menu-combo.jpg" alt="Game day combo box" /></div>
+      <div class="mcard__body">
+        <div class="mcard__row"><h3>Game Day Combo</h3><span class="mcard__price">$22</span></div>
+        <p>The GOAT Signature, GOAT Fries and a Shake — packed fresh for pickup or delivery.</p>
+        <button class="mcard__cta mcard__cta--solid addbtn" data-hover>ADD COMBO</button>
+      </div>
+    </article>
+  </div>
+
+  <div class="store__cta" id="order">
+    <p class="eyebrow eyebrow--dark" data-sr>HUNGRY YET?</p>
+    <h2 class="store__big" data-sr>THE GOAT IS READY.</h2>
+    <a href="#top" class="cta" id="orderBtn" data-hover>ORDER NOW</a>
+    <p class="order__note">Demo experience — no real order is placed.</p>
+    <div class="store__brand">GOAT BURGER CO.</div>
+  </div>
+</section>
+
+<div class="toast" id="toast">Added to your order 🐐🔥</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
