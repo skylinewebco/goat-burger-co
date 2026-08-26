@@ -9,6 +9,14 @@
   const isTouch = matchMedia("(hover:none),(pointer:coarse)").matches;
   gsap.registerPlugin(ScrollTrigger);
 
+  /* ---- performance config (no visual change) ----
+     force3D promotes every transform to a GPU layer (translate3d);
+     limitCallbacks trims callback churn; ignoreMobileResize stops the
+     mobile URL-bar show/hide from thrashing ScrollTrigger refreshes. */
+  gsap.config({ force3D: true });
+  gsap.ticker.lagSmoothing(0);
+  ScrollTrigger.config({ ignoreMobileResize: true, limitCallbacks: true });
+
   const camera = document.getElementById("camera");
   const burger = document.getElementById("burger");
   const glow = document.getElementById("glow");
@@ -97,7 +105,8 @@
 
     const tl = gsap.timeline({
       defaults:{ ease:"none" },
-      scrollTrigger:{ trigger:"#track", start:"top top", end:"bottom bottom", scrub: reduced ? true : 1 },
+      scrollTrigger:{ trigger:"#track", start:"top top", end:"bottom bottom",
+        scrub: reduced ? true : 0.6, invalidateOnRefresh: true },
     });
 
     for (let i = 1; i < beats.length; i++){
@@ -139,10 +148,13 @@
 
   const progressBar = document.getElementById("progressBar");
   const nav = document.getElementById("nav");
+  let navOn=false, hintHidden=false;
   ScrollTrigger.create({ start:0, end:"max", onUpdate:(s)=>{
+    // only the compositor transform updates every frame; class/opacity flip once on state change
     progressBar.style.transform = `scaleX(${s.progress})`;
-    nav.classList.toggle("scrolled", s.scroll() > 40);
-    if (hint && s.scroll() > 60) hint.style.opacity = 0;
+    const y = s.scroll();
+    if ((y>40)!==navOn){ navOn=y>40; nav.classList.toggle("scrolled", navOn); }
+    if (!hintHidden && hint && y>60){ hintHidden=true; hint.style.opacity=0; }
   }});
 
   let counted = false;
@@ -204,8 +216,10 @@
     const cur=document.querySelector(".cursor"), dot=document.querySelector(".cursor-dot");
     const xT=gsap.quickTo(cur,"x",{duration:.5,ease:"power3"}), yT=gsap.quickTo(cur,"y",{duration:.5,ease:"power3"});
     const xD=gsap.quickTo(dot,"x",{duration:.12,ease:"power3"}), yD=gsap.quickTo(dot,"y",{duration:.12,ease:"power3"});
+    // reuse a single quickTo per axis for the glow instead of spawning a tween per mousemove
+    const gX=gsap.quickTo(glow,"x",{duration:1.2,ease:"power2.out"}), gY=gsap.quickTo(glow,"y",{duration:1.2,ease:"power2.out"});
     addEventListener("mousemove",(e)=>{ xT(e.clientX);yT(e.clientY);xD(e.clientX);yD(e.clientY);
-      gsap.to(glow,{x:(e.clientX/innerWidth-.5)*36,y:(e.clientY/innerHeight-.5)*36,duration:1.2,ease:"power2.out"}); });
+      gX((e.clientX/innerWidth-.5)*36); gY((e.clientY/innerHeight-.5)*36); }, {passive:true});
     document.querySelectorAll("[data-hover]").forEach((el)=>{
       el.addEventListener("mouseenter",()=>cur.classList.add("grow"));
       el.addEventListener("mouseleave",()=>cur.classList.remove("grow"));

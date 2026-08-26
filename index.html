@@ -55,12 +55,12 @@
        cutout, clipped to a horizontal band, so the slices separate & reassemble. -->
   <div class="camera" id="camera">
     <div class="burger" id="burger">
-      <div class="layer" data-key="topbun"><img class="layer__img" src="topbun.png" alt="toasted brioche top bun" /></div>
-      <div class="layer" data-key="cheeseA"><img class="layer__img" src="cheeseA.png" alt="melted American cheese" /></div>
-      <div class="layer" data-key="pattyA"><img class="layer__img" src="pattyA.png" alt="smashed beef patty" /></div>
-      <div class="layer" data-key="cheeseB"><img class="layer__img" src="cheeseB.png" alt="second layer of melted American cheese" /></div>
-      <div class="layer" data-key="pattyB"><img class="layer__img" src="pattyB.png" alt="second smashed beef patty" /></div>
-      <div class="layer" data-key="bottombun"><img class="layer__img" src="bottombun.png" alt="toasted brioche bottom bun" /></div>
+      <div class="layer" data-key="topbun"><img class="layer__img" decoding="async" src="topbun.png" alt="toasted brioche top bun" /></div>
+      <div class="layer" data-key="cheeseA"><img class="layer__img" decoding="async" src="cheeseA.png" alt="melted American cheese" /></div>
+      <div class="layer" data-key="pattyA"><img class="layer__img" decoding="async" src="pattyA.png" alt="smashed beef patty" /></div>
+      <div class="layer" data-key="cheeseB"><img class="layer__img" decoding="async" src="cheeseB.png" alt="second layer of melted American cheese" /></div>
+      <div class="layer" data-key="pattyB"><img class="layer__img" decoding="async" src="pattyB.png" alt="second smashed beef patty" /></div>
+      <div class="layer" data-key="bottombun"><img class="layer__img" decoding="async" src="bottombun.png" alt="toasted brioche bottom bun" /></div>
     </div>
   </div>
 
@@ -83,10 +83,10 @@
   <!-- Delivery / meal stage — appears after the burger reassembles.
        Uses your real photos when present; hidden gracefully until then. -->
   <div class="meal" id="meal" aria-hidden="true">
-    <img class="meal__el meal__box-open"   id="boxOpen"   data-photo="box-open.png"   alt="" />
-    <img class="meal__el meal__fries"       id="fries"     data-photo="fries.png"       alt="" />
-    <img class="meal__el meal__shake"       id="shake"     data-photo="shake.png"       alt="" />
-    <img class="meal__el meal__box-closed"  id="boxClosed" data-photo="box-closed.png"  alt="" />
+    <img loading="lazy" decoding="async" class="meal__el meal__box-open"   id="boxOpen"   data-photo="box-open.png"   alt="" />
+    <img loading="lazy" decoding="async" class="meal__el meal__fries"       id="fries"     data-photo="fries.png"       alt="" />
+    <img loading="lazy" decoding="async" class="meal__el meal__shake"       id="shake"     data-photo="shake.png"       alt="" />
+    <img loading="lazy" decoding="async" class="meal__el meal__box-closed"  id="boxClosed" data-photo="box-closed.png"  alt="" />
   </div>
 
   <!-- scroll hint (fades after first scroll) -->
@@ -106,7 +106,7 @@
 
   <div class="menu-grid">
     <article class="mcard" data-sr>
-      <div class="mcard__img"><img data-photo="menu-burger.jpg" src="burger-cut.png" alt="The GOAT Signature double smash cheeseburger" /></div>
+      <div class="mcard__img"><img loading="lazy" decoding="async" data-photo="menu-burger.jpg" src="burger-cut.png" alt="The GOAT Signature double smash cheeseburger" /></div>
       <div class="mcard__body">
         <div class="mcard__row"><h3>The GOAT Signature</h3><span class="mcard__price">$14</span></div>
         <p>Double smash beef, aged American cheese, toasted brioche.</p>
@@ -115,7 +115,7 @@
     </article>
 
     <article class="mcard" data-sr>
-      <div class="mcard__img" data-slot="fries"><img data-photo="menu-fries.jpg" alt="GOAT hand-cut fries" /></div>
+      <div class="mcard__img" data-slot="fries"><img loading="lazy" decoding="async" data-photo="menu-fries.jpg" alt="GOAT hand-cut fries" /></div>
       <div class="mcard__body">
         <div class="mcard__row"><h3>GOAT Fries</h3><span class="mcard__price">$6</span></div>
         <p>Hand-cut, skin-on, tossed in sea salt. Crisp every time.</p>
@@ -124,7 +124,7 @@
     </article>
 
     <article class="mcard" data-sr>
-      <div class="mcard__img" data-slot="shake"><img data-photo="menu-shake.jpg" alt="Thick vanilla malt shake" /></div>
+      <div class="mcard__img" data-slot="shake"><img loading="lazy" decoding="async" data-photo="menu-shake.jpg" alt="Thick vanilla malt shake" /></div>
       <div class="mcard__body">
         <div class="mcard__row"><h3>The Shake</h3><span class="mcard__price">$7</span></div>
         <p>Thick vanilla malt, real dairy, hand-spun to order.</p>
@@ -133,7 +133,7 @@
     </article>
 
     <article class="mcard mcard--wide" data-sr>
-      <div class="mcard__img" data-slot="combo"><img data-photo="menu-combo.jpg" alt="Game day combo box" /></div>
+      <div class="mcard__img" data-slot="combo"><img loading="lazy" decoding="async" data-photo="menu-combo.jpg" alt="Game day combo box" /></div>
       <div class="mcard__body">
         <div class="mcard__row"><h3>Game Day Combo</h3><span class="mcard__price">$22</span></div>
         <p>The GOAT Signature, GOAT Fries and a Shake — packed fresh for pickup or delivery.</p>
