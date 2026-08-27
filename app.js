@@ -131,6 +131,53 @@
       }
     });
 
+    /* =========================================================
+       MEAL PACKING — continues the SAME scrubbed timeline after the
+       burger reassembles: form the combo → open box → items enter → box closes.
+       (real fries/shake/sauce photos + a CSS kraft box; scroll-controlled, reversible)
+       ========================================================= */
+    const pack=document.getElementById("pack"),
+      boxBack=document.getElementById("boxBack"), boxFront=document.getElementById("boxFront"),
+      boxLid=document.getElementById("boxLid"),
+      pFries=document.getElementById("pFries"), pShake=document.getElementById("pShake"),
+      pSauce=document.getElementById("pSauce");
+    const U = H;  // offset unit = camera height (responsive)
+
+    // initial states — off-screen / hidden / box below with lid open
+    gsap.set([pFries,pShake,pSauce], { autoAlpha:0 });
+    gsap.set(pFries, { x:-U*1.5, y:U*0.15, scale:1, rotation:-6 });
+    gsap.set(pShake, { x: U*1.5, y:U*0.02, scale:1, rotation:5 });
+    gsap.set(pSauce, { x: 0,     y:U*1.3,  scale:0.7 });
+    gsap.set([boxBack,boxFront], { autoAlpha:0, y:U*1.25 });
+    gsap.set(boxLid, { rotationX:-115, transformPerspective:800 });
+
+    const cap = capNodes.goat, P = tl.duration();   // anchor right after the film ends
+    if (cap) tl.to(cap, { autoAlpha:0, y:-18, duration:.4 }, P);
+
+    // 1 — MEAL FORMS: burger shrinks; fries/shake/sauce glide in as one combo
+    tl.to(camera, { scale:0.66, y:-U*0.06, rotation:0, duration:1 }, P);
+    tl.to(pFries, { autoAlpha:1, x:-U*0.80, y:U*0.16, rotation:-3, duration:1 }, P);
+    tl.to(pShake, { autoAlpha:1, x: U*0.82, y:U*0.02, rotation:3,  duration:1 }, P);
+    tl.to(pSauce, { autoAlpha:1, x:-U*0.16, y:U*0.66, scale:0.6,   duration:1 }, P+0.1);
+    tl.to(glow,   { scale:1.05, opacity:.9, duration:1 }, P);
+
+    // 2 — OPEN BOX rises in; the meal lifts above the opening
+    tl.to([boxBack,boxFront], { autoAlpha:1, y:0, duration:1 }, P+1);
+    tl.to(camera, { y:-U*0.16, duration:1 }, P+1);
+
+    // 3 — MEAL ENTERS THE BOX: everything settles inside
+    tl.to(camera, { scale:0.44, y:0, duration:1.2 }, P+2);
+    tl.to(pFries, { x:-U*0.26, y:U*0.24, scale:0.62, rotation:-2, duration:1.2 }, P+2);
+    tl.to(pShake, { x: U*0.30, y:U*0.10, scale:0.66, rotation:2,  duration:1.2 }, P+2);
+    tl.to(pSauce, { x: U*0.05, y:U*0.32, scale:0.42, duration:1.2 }, P+2);
+
+    // 4 — BOX CLOSES: lid folds down over the packed meal
+    tl.to(boxLid, { rotationX:0, duration:1.3, ease:"power2.inOut" }, P+3.3);
+    tl.to(glow,   { scale:.95, opacity:.7, duration:1.3 }, P+3.3);
+
+    // 5 — settle: a properly packed GOAT BURGER CO. order
+    tl.to([boxBack,boxFront], { scale:1.02, duration:.5 }, P+4.6);
+
     return () => { tl.scrollTrigger && tl.scrollTrigger.kill(); tl.kill(); };
   });
 
@@ -250,22 +297,6 @@
   document.querySelectorAll(".addbtn").forEach((b)=>{
     b.addEventListener("click",(e)=>{ e.preventDefault();
       toastEl.classList.add("show"); gsap.delayedCall(2.4, ()=>toastEl.classList.remove("show")); });
-  });
-
-  /* =========================================================
-     DELIVERY / MEAL scaffold — activates only when the real
-     box/fries/shake photos are present in the folder.
-     ========================================================= */
-  const meal = document.getElementById("meal");
-  const mealEls = gsap.utils.toArray(".meal__el");
-  let mealReady = 0;
-  mealEls.forEach((img)=>{
-    const src = img.getAttribute("data-photo");
-    const p = new Image();
-    p.onload = ()=>{ img.src = src; img.classList.add("loaded"); mealReady++;
-      if (document.getElementById("boxOpen").classList.contains("loaded")) meal.classList.add("ready"); };
-    p.onerror = ()=>{};   // stays dormant → flow goes burger story → store
-    p.src = src;
   });
 
   addEventListener("load", ()=>ScrollTrigger.refresh());

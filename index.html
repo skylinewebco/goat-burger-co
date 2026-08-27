@@ -80,13 +80,17 @@
     <p class="nutri__note">The GOAT signature — demo values, prepared fresh.</p>
   </div>
 
-  <!-- Delivery / meal stage — appears after the burger reassembles.
-       Uses your real photos when present; hidden gracefully until then. -->
-  <div class="meal" id="meal" aria-hidden="true">
-    <img loading="lazy" decoding="async" class="meal__el meal__box-open"   id="boxOpen"   data-photo="box-open.png"   alt="" />
-    <img loading="lazy" decoding="async" class="meal__el meal__fries"       id="fries"     data-photo="fries.png"       alt="" />
-    <img loading="lazy" decoding="async" class="meal__el meal__shake"       id="shake"     data-photo="shake.png"       alt="" />
-    <img loading="lazy" decoding="async" class="meal__el meal__box-closed"  id="boxClosed" data-photo="box-closed.png"  alt="" />
+  <!-- Meal-packing stage — real fries/shake/sauce + a CSS kraft takeaway box.
+       Driven entirely by the scroll timeline (starts hidden). -->
+  <div class="pack" id="pack" aria-hidden="true">
+    <div class="box-back" id="boxBack"></div>
+    <img class="pack__item" id="pFries" src="fries.png" alt="GOAT hand-cut fries" />
+    <img class="pack__item" id="pShake" src="shake.png" alt="GOAT shake" />
+    <img class="pack__item" id="pSauce" src="sauce.png" alt="GOAT signature sauce" />
+    <div class="box-front" id="boxFront">
+      <div class="box-front__wall"></div>
+      <div class="box-lid" id="boxLid"><span>GOAT <b>BURGER CO.</b></span></div>
+    </div>
   </div>
 
   <!-- scroll hint (fades after first scroll) -->
@@ -106,7 +110,7 @@
 
   <div class="menu-grid">
     <article class="mcard" data-sr>
-      <div class="mcard__img"><img loading="lazy" decoding="async" data-photo="menu-burger.jpg" src="burger-cut.png" alt="The GOAT Signature double smash cheeseburger" /></div>
+      <div class="mcard__img"><img loading="lazy" decoding="async" data-photo="menu-burger.jpg" alt="The GOAT Signature double smash cheeseburger" /></div>
       <div class="mcard__body">
         <div class="mcard__row"><h3>The GOAT Signature</h3><span class="mcard__price">$14</span></div>
         <p>Double smash beef, aged American cheese, toasted brioche.</p>
