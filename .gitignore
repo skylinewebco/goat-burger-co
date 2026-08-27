@@ -5,3 +5,6 @@ chat-extract.txt
 *.tmp
 # dev-only render artifacts
 debug-*.png
+
+# large source assets (inputs to process-assets.js / draw-box.js)
+asset-*.png

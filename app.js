@@ -138,52 +138,60 @@
        ========================================================= */
     const boxBack=document.getElementById("boxBack"), boxFront=document.getElementById("boxFront"),
       boxLid=document.getElementById("boxLid"),
-      pFries=document.getElementById("pFries"), pShake=document.getElementById("pShake"),
-      pSauce=document.getElementById("pSauce");
+      pBurger=document.getElementById("pBurger"),
+      pFries=document.getElementById("pFries"), pShake=document.getElementById("pShake");
 
-    // box display geometry (matches CSS width; image aspect 1300x900)
-    const BW = Math.min(window.innerWidth * (isDesktop ? 0.84 : 0.96), 940);
-    const BH = BW * 900 / 1300;
-    // size the food to real proportions of the box, then position by box fractions
-    pFries.style.height = (0.30 * BH) + "px";
-    pShake.style.height = (0.34 * BH) + "px";
-    pSauce.style.height = (0.17 * BH) + "px";
-    const camBox = (0.34 * BH) / H;   // burger height ≈ 0.34 of the box height
+    // box display geometry (matches CSS width; branded box image aspect 1400x1000)
+    const BW = Math.min(window.innerWidth * (isDesktop ? 0.88 : 0.97), 1000);
+    const BH = BW * 1000 / 1400;
+    // size the branded food to real proportions of the box
+    pBurger.style.height = (0.40 * BH) + "px";
+    pFries.style.height  = (0.40 * BH) + "px";
+    pShake.style.height  = (0.46 * BH) + "px";
 
-    // initial: food off to the sides / below, box below with lid folded open
-    gsap.set([pFries,pShake,pSauce], { autoAlpha:0 });
-    gsap.set(pFries, { x:-BW*0.55, y:BH*0.10, scale:1.35, rotation:-6 });
-    gsap.set(pShake, { x: BW*0.55, y:BH*0.02, scale:1.35, rotation:5 });
-    gsap.set(pSauce, { x:-BW*0.10, y:BH*0.9,  scale:1.1 });
+    // settled positions inside the box (from the packed-box render)
+    const S = {
+      burger:{ x: 0,          y: BH*0.16 },
+      fries: { x:-BW*0.245,   y: BH*0.15 },
+      shake: { x: BW*0.245,   y: BH*0.12 },
+    };
+
+    // initial: everything hidden; box below with the branded lid folded open
+    gsap.set([pBurger,pFries,pShake], { autoAlpha:0 });
+    gsap.set(pBurger, { x:0, y:-BH*0.55, scale:1.25 });
+    gsap.set(pFries,  { x:-BW*0.85, y:S.fries.y, rotation:-5 });
+    gsap.set(pShake,  { x: BW*0.85, y:S.shake.y, rotation:5 });
     gsap.set([boxBack,boxFront], { autoAlpha:0, y:BH*1.15 });
-    gsap.set(boxLid, { autoAlpha:0, y:-BH*0.30, rotationX:-105, transformPerspective:900 });
+    gsap.set(boxLid, { autoAlpha:0, y:-BH*0.34, rotationX:-105, transformPerspective:1000 });
 
     const cap = capNodes.goat, P = tl.duration();   // anchor right after the film ends
     if (cap) tl.to(cap, { autoAlpha:0, y:-18, duration:.4 }, P);
 
-    // 1 — MEAL FORMS: burger shrinks; real fries/shake/sauce glide in as one combo
-    tl.to(camera, { scale:camBox*1.45, y:-BH*0.05, rotation:0, duration:1 }, P);
-    tl.to(pFries, { autoAlpha:1, x:-BW*0.30, y:BH*0.08, scale:1.2, rotation:-3, duration:1 }, P);
-    tl.to(pShake, { autoAlpha:1, x: BW*0.30, y:BH*0.02, scale:1.2, rotation:3,  duration:1 }, P);
-    tl.to(pSauce, { autoAlpha:1, x:-BW*0.08, y:BH*0.34, scale:0.95, duration:1 }, P+0.1);
-    tl.to(glow,   { scale:1.05, opacity:.9, duration:1 }, P);
+    // 0 — hand-off: the deconstructed burger reassembles then CROSSFADES into the
+    //     branded GOAT burger (same spot, same size) so it feels like one object
+    tl.to(camera,  { autoAlpha:0, scale:"-=0.15", duration:.8 }, P);
+    tl.to(pBurger, { autoAlpha:1, duration:.8 }, P+0.1);
+    tl.to(glow,    { scale:1.05, opacity:.9, duration:1 }, P);
 
-    // 2 — OPEN BOX rises in behind/around the meal
+    // 1 — OPEN BRANDED BOX rises in
     tl.to([boxBack,boxFront], { autoAlpha:1, y:0, duration:1 }, P+1);
 
-    // 3 — MEAL SETTLES INSIDE the box (real positions, front wall overlaps the bases)
-    tl.to(camera, { scale:camBox, y:-BH*0.02, duration:1.2 }, P+2);
-    tl.to(pFries, { x:-BW*0.19, y:BH*0.03, scale:1, rotation:-2, duration:1.2 }, P+2);
-    tl.to(pShake, { x: BW*0.19, y:BH*0.00, scale:1, rotation:2,  duration:1.2 }, P+2);
-    tl.to(pSauce, { x: BW*0.02, y:BH*0.20, scale:1, duration:1.2 }, P+2);
+    // 2 — BURGER settles into the box (centre)
+    tl.to(pBurger, { x:S.burger.x, y:S.burger.y, scale:1, duration:1.1, ease:"power2.out" }, P+1.4);
 
-    // 4 — BOX CLOSES: lid rises into place, then folds down over the packed meal
-    tl.to(boxLid, { autoAlpha:1, duration:.3 }, P+3.2);
-    tl.to(boxLid, { rotationX:0, duration:1.3, ease:"power2.inOut" }, P+3.4);
-    tl.to(glow,   { scale:.95, opacity:.7, duration:1.3 }, P+3.4);
+    // 3 — FRIES slide in from the left
+    tl.to(pFries, { autoAlpha:1, x:S.fries.x, rotation:0, duration:1.1, ease:"power2.out" }, P+2.4);
 
-    // 5 — settle: a properly packed GOAT BURGER CO. order held briefly
-    tl.to([boxBack,boxFront,boxLid], { scale:1.015, duration:.5 }, P+4.7);
+    // 4 — SHAKE slides in from the right
+    tl.to(pShake, { autoAlpha:1, x:S.shake.x, rotation:0, duration:1.1, ease:"power2.out" }, P+3.3);
+
+    // 5 — BOX CLOSES: the branded lid folds down over the packed meal
+    tl.to(boxLid, { autoAlpha:1, duration:.3 }, P+4.3);
+    tl.to(boxLid, { rotationX:0, duration:1.4, ease:"power2.inOut" }, P+4.5);
+    tl.to(glow,   { scale:.9, opacity:.65, duration:1.4 }, P+4.5);
+
+    // 6 — settle: a properly packed GOAT BURGER CO. order held briefly
+    tl.to([boxBack,boxFront,boxLid], { scale:1.015, duration:.5 }, P+6.0);
 
     return () => { tl.scrollTrigger && tl.scrollTrigger.kill(); tl.kill(); };
   });
