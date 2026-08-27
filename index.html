@@ -80,17 +80,18 @@
     <p class="nutri__note">The GOAT signature — demo values, prepared fresh.</p>
   </div>
 
-  <!-- Meal-packing stage — real fries/shake/sauce + a CSS kraft takeaway box.
+  <!-- Meal-packing stage — real food + a rendered open kraft box (image pieces),
+       layered so the burger/food sit INSIDE (back behind, front wall in front).
        Driven entirely by the scroll timeline (starts hidden). -->
-  <div class="pack" id="pack" aria-hidden="true">
-    <div class="box-back" id="boxBack"></div>
-    <img class="pack__item" id="pFries" src="fries.png" alt="GOAT hand-cut fries" />
-    <img class="pack__item" id="pShake" src="shake.png" alt="GOAT shake" />
-    <img class="pack__item" id="pSauce" src="sauce.png" alt="GOAT signature sauce" />
-    <div class="box-front" id="boxFront">
-      <div class="box-front__wall"></div>
-      <div class="box-lid" id="boxLid"><span>GOAT <b>BURGER CO.</b></span></div>
-    </div>
+  <div class="box-layer box-layer--back" aria-hidden="true"><img id="boxBack" src="box-back.png" alt="" decoding="async" /></div>
+  <div class="pack-items" id="packItems" aria-hidden="true">
+    <img class="pack__item" id="pFries" src="fries.png" alt="GOAT hand-cut fries" decoding="async" />
+    <img class="pack__item" id="pShake" src="shake.png" alt="GOAT shake" decoding="async" />
+    <img class="pack__item" id="pSauce" src="sauce.png" alt="GOAT signature sauce" decoding="async" />
+  </div>
+  <div class="box-layer box-layer--front" aria-hidden="true">
+    <img id="boxFront" src="box-front.png" alt="" decoding="async" />
+    <img id="boxLid" src="box-lid.png" alt="" decoding="async" />
   </div>
 
   <!-- scroll hint (fades after first scroll) -->
