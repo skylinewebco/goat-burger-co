@@ -83,15 +83,15 @@
   <!-- Meal-packing stage — real food + a rendered open kraft box (image pieces),
        layered so the burger/food sit INSIDE (back behind, front wall in front).
        Driven entirely by the scroll timeline (starts hidden). -->
-  <div class="box-layer box-layer--back" aria-hidden="true"><img id="boxBack" src="box-back.png" alt="" decoding="async" /></div>
+  <div class="box-layer box-layer--back" aria-hidden="true"><img id="boxBack" data-lazy="box-back.png" alt="" decoding="async" /></div>
   <div class="pack-items" id="packItems" aria-hidden="true">
-    <img class="pack__item" id="pBurger" src="burger.png" alt="GOAT signature burger" decoding="async" />
-    <img class="pack__item" id="pFries" src="fries.png" alt="GOAT fries" decoding="async" />
-    <img class="pack__item" id="pShake" src="shake.png" alt="GOAT shake" decoding="async" />
+    <img class="pack__item" id="pBurger" data-lazy="burger.png" alt="GOAT signature burger" decoding="async" />
+    <img class="pack__item" id="pFries" data-lazy="fries.png" alt="GOAT fries" decoding="async" />
+    <img class="pack__item" id="pShake" data-lazy="shake.png" alt="GOAT shake" decoding="async" />
   </div>
   <div class="box-layer box-layer--front" aria-hidden="true">
-    <img id="boxFront" src="box-front.png" alt="" decoding="async" />
-    <img id="boxLid" src="box-lid.png" alt="" decoding="async" />
+    <img id="boxFront" data-lazy="box-front.png" alt="" decoding="async" />
+    <img id="boxLid" data-lazy="box-lid.png" alt="" decoding="async" />
   </div>
 
   <!-- scroll hint (fades after first scroll) -->

@@ -88,7 +88,8 @@
         const active = beat.focus === key;
         s = active ? 1.14 : 0.9;
         o = active ? 1 : 0.28;
-        blur = active ? 0 : 3;
+        // dim the non-focused layers; a lighter blur on mobile keeps frames steady
+        blur = active ? 0 : (isDesktop ? 3 : 1.5);
       }
       return { y, s, o, blur };
     }
@@ -218,6 +219,19 @@
     if ((y>40)!==navOn){ navOn=y>40; nav.classList.toggle("scrolled", navOn); }
     if (!hintHidden && hint && y>60){ hintHidden=true; hint.style.opacity=0; }
   }});
+
+  // defer the heavy box/food PNGs so they don't compete with the initial render:
+  // load them on the first user interaction (they'll scroll to see anything) or a
+  // short idle fallback — decoded and ready long before the packing plays.
+  let packLoaded = false;
+  function loadPackAssets(){
+    if (packLoaded) return; packLoaded = true;
+    document.querySelectorAll("img[data-lazy]").forEach((img)=>{ img.src = img.dataset.lazy; });
+    requestAnimationFrame(()=>ScrollTrigger.refresh());
+  }
+  ["wheel","touchstart","pointerdown","keydown"].forEach((e)=>
+    addEventListener(e, loadPackAssets, { once:true, passive:true }));
+  setTimeout(loadPackAssets, 1500);   // fallback: load once initial render has settled
 
   let counted = false;
   ScrollTrigger.create({ trigger:"#track", start:"top top", end:"bottom bottom",
